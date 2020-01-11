@@ -3,7 +3,7 @@
 ## APIs
 ### `GET /flights?airline=XYZ`
 This API will return with the following syntax:
-``` json
+```
 {
     "flights": Array of flights,
     "size": Total results provided (can be expanded for pagination),
@@ -14,7 +14,7 @@ The optional query parameter `airline` is included to filter the dataset returne
 
 ### `POST /flights`
 This API will return with the following syntax:
-``` json
+```
 {
     "flight": The database object of the POSTed data,
     "status": HTTP status code
@@ -50,6 +50,10 @@ The tests provided have 100% coverage of the APIs through blackbox integration t
 ## Productionizing
 The included database provider (LokiJS) is not part of the target architecture. This instead would be swapped out for a proper hosted persistent database provider, e.g. MongoDB.
 The ExpressJS layer has been designed to run in a lightweight serverless execution environment, like AWS Lambda.
+
+### Design
+As this application has only a single function, a simple deployment can be considered.
+![Production Design](https://github.com/DanWard/flight-api/raw/master/production.png)
 
 ## Security
 Cyber security standards have also been considered and this application is shipped with multiple different protection mechanisms that are available when run in the production mode.
