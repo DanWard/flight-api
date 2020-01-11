@@ -1,0 +1,10 @@
+{
+  "name": "flight-api",
+  "version": "1.0.0",
+  "description": "API to return flight information backed by a local database",
+  "main": "index.js",
+  "scripts": {
+  },
+  "author": "Daniel Ward",
+  "license": "GPL"
+}
