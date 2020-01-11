@@ -1,0 +1,11 @@
+{
+    "express": {
+        "useSession": true,
+        "useLusca": true
+    },
+    "session": {
+        "cookie": {
+            "secure": "true"
+        }
+    }
+}
