@@ -19,7 +19,6 @@ export class FlightController {
                 flightNumber: {
                     "$contains": req.query.airline
                 }
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } as any);
         } else {
             results = this.database.find({});
@@ -46,7 +45,6 @@ export class FlightController {
         } catch (err) {
             console.error(err);
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const validationErrors = err.length ? err.reduce((prev: any, error: any) => {
                 prev.push(error.constraints);
                 return prev;

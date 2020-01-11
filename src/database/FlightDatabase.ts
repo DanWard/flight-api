@@ -41,7 +41,6 @@ export class FlightDatabase {
      * Scrubs the lokijs data from the response
      * @param flight Flight from the db
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private clean(flight: any) {
         delete flight["meta"];
         delete flight["$loki"];

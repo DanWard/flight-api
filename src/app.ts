@@ -12,10 +12,8 @@ import { FlightDatabase } from "./database/FlightDatabase";
 // Create Express server
 const app = express();
 
-// eslint-disable @typescript-eslint/no-explicit-any
 const sessionConfig = config.get("session") as any;
 const expressConfig = config.get("express") as any;
-// eslint-enable @typescript-eslint/no-explicit-any
 
 if (expressConfig.useCompression) {
     // Default config for compression
@@ -66,7 +64,8 @@ app.use((err: Error, req: express.Request, res: express.Response, next: express.
     });
 });
 
-const flightController = new FlightController(new FlightDatabase());
+const flightDatabase = new FlightDatabase();
+const flightController = new FlightController(flightDatabase);
 app.use("/flights", flightController.router);
 
 app.listen(expressConfig.port, () => console.log(`Express started on ${expressConfig.port}`));

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { plainToClass } from "class-transformer";
 import { validateOrReject } from "class-validator";
 
