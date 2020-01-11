@@ -7,8 +7,9 @@ import * as config from "config";
 
 import "reflect-metadata";
 import { FlightController } from "./routes/FlightController";
+import { FlightDatabase } from "./database/FlightDatabase";
 
-const flightController = new FlightController({});
+const flightController = new FlightController(new FlightDatabase());
 
 // Create Express server
 const app = express();
