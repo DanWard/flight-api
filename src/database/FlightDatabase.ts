@@ -1,14 +1,18 @@
 import * as loki from "lokijs";
 import * as fs from "fs-extra";
+import * as config from "config";
 import { Flight } from "src/models/Flight";
 
 export class FlightDatabase {
 
     db = new loki("db");
     flights = this.db.addCollection("flights");
+    databaseConfig = config.get("database") as any;
 
     constructor() {
-        this.importMockData();
+        if (this.databaseConfig.importMock) {
+            this.importMockData();
+        }
     }
 
     /**

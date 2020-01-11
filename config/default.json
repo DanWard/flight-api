@@ -12,5 +12,8 @@
         "resave": false,
         "saveUninitialized": true,
         "cookie": {}
+    },
+    "database": {
+        "importMock": true
     }
 }

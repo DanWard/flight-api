@@ -68,6 +68,4 @@ const flightDatabase = new FlightDatabase();
 const flightController = new FlightController(flightDatabase);
 app.use("/flights", flightController.router);
 
-app.listen(expressConfig.port, () => console.log(`Express started on ${expressConfig.port}`));
-
-export default app;
+module.exports = app.listen(expressConfig.port, () => console.log(`Express started on ${expressConfig.port}`));
