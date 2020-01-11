@@ -6,6 +6,9 @@ import * as session from "express-session";
 import * as config from "config";
 
 import "reflect-metadata";
+import { FlightController } from "./routes/FlightController";
+
+const flightController = new FlightController({});
 
 // Create Express server
 const app = express();
@@ -44,5 +47,6 @@ if (app.get("env") === "production") {
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Express started on ${port}`));
 
+app.use("/flights", flightController.router);
 
 export default app;
