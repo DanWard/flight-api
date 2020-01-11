@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import * as express from "express";
 import * as compression from "compression";
 import * as bodyParser from "body-parser";
@@ -5,49 +6,69 @@ import * as lusca from "lusca";
 import * as session from "express-session";
 import * as config from "config";
 
-import "reflect-metadata";
 import { FlightController } from "./routes/FlightController";
 import { FlightDatabase } from "./database/FlightDatabase";
-
-const flightController = new FlightController(new FlightDatabase());
 
 // Create Express server
 const app = express();
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable @typescript-eslint/no-explicit-any
 const sessionConfig = config.get("session") as any;
+const expressConfig = config.get("express") as any;
+// eslint-enable @typescript-eslint/no-explicit-any
 
-// Default config for compression
-app.use(compression());
+if (expressConfig.useCompression) {
+    // Default config for compression
+    app.use(compression());
+}
 
-// Allow inbound POST requirements
-app.use(bodyParser.json());
-
-/**
- * Enable this to allow form-based POST of data
- */
-// app.use(bodyParser.urlencoded({ extended: true }));
+if (expressConfig.useJsonParser) {
+    // Allow inbound POST requirements
+    app.use(bodyParser.json());
+}
+if (expressConfig.useUrlEncParser) {
+    app.use(bodyParser.urlencoded({ extended: true }));
+}
 
 // BEGIN: Security hardening
-app.use(session(sessionConfig));
-app.use(lusca({
-    csrf: true,
-    xframe: "SAMEORIGIN",
-    p3p: "ABCDEF",
-    hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
-    xssProtection: true,
-    nosniff: true,
-    referrerPolicy: "same-origin"
-}));
+if (expressConfig.useSession) {
+    app.use(session(sessionConfig));
+
+    if (expressConfig.useLusca) {
+        app.use(lusca({
+            csrf: true,
+            xframe: "SAMEORIGIN",
+            p3p: "ABCDEF",
+            hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
+            xssProtection: true,
+            nosniff: true,
+            referrerPolicy: "same-origin"
+        }));
+    }
+
+}
+
 app.disable("x-powered-by");
 if (app.get("env") === "production") {
     app.set("trust proxy", 1); // Allow single reverse proxy
 }
 // END: Security hardening
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Express started on ${port}`));
+/**
+ * Add generic error handler
+ */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error(err.stack)
+    res.status(500).send({
+        status: 500,
+        message: err.message
+    });
+});
 
+const flightController = new FlightController(new FlightDatabase());
 app.use("/flights", flightController.router);
+
+app.listen(expressConfig.port, () => console.log(`Express started on ${expressConfig.port}`));
 
 export default app;

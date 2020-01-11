@@ -1,4 +1,12 @@
 {
+    "express": {
+        "port": 3000,
+        "useCompression": true,
+        "useJsonParser": true, 
+        "useUrlEncParser": false,
+        "useSession": true,
+        "useLusca": true
+    },
     "session": {
         "secret": "keyboard cat",
         "resave": false,
