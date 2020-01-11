@@ -35,7 +35,7 @@ export const parseJson = function (json: string) {
  * @param json JSON string input
  * @param classType class to be coerced into
  */
-export const parseJsonAsClass = function (json: string, classType: any) {
+export const parseJsonAsClass = function (json: string, classType: any): any {
     const parsed = parseJson(json);
     return plainToClass(classType, parsed);
 };

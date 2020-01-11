@@ -1,11 +1,14 @@
 import { Router, Request, Response } from "express";
-import { FlightDatabase } from "src/database/FlightDatabase";
+import { FlightDatabase } from "../database/FlightDatabase";
+import { parseJsonAndValidate } from "../util/ParseJson";
+import { Flight } from "../models/Flight";
 
 export class FlightController {
     public router = Router();
 
     constructor(private database: FlightDatabase) {
         this.router.get("/", this.getAll);
+        this.router.post("/", this.insertFlight);
     }
 
     getAll = (req: Request, res: Response) => {
@@ -16,7 +19,7 @@ export class FlightController {
                 flightNumber: {
                     "$contains": req.query.airline
                 }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } as any);
         } else {
             results = this.database.find({});
@@ -28,4 +31,32 @@ export class FlightController {
             status: 200
         });
     }
+
+    insertFlight = async (req: Request, res: Response) => {
+        try {
+            const flight: Flight = await parseJsonAndValidate(JSON.stringify(req.body), Flight) as Flight;
+
+            const result = this.database.insert(flight);
+
+            res.status(201).send({
+                flight: result,
+                status: 201
+            });
+
+        } catch (err) {
+            console.error(err);
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const validationErrors = err.length ? err.reduce((prev: any, error: any) => {
+                prev.push(error.constraints);
+                return prev;
+            }, []) : undefined;
+
+            res.status(400).send({
+                error: "Request failed",
+                message: validationErrors ? validationErrors : "",
+                status: 400
+            });
+        }
+    };
 }

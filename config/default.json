@@ -5,7 +5,7 @@
         "useJsonParser": true, 
         "useUrlEncParser": false,
         "useSession": true,
-        "useLusca": true
+        "useLusca": false
     },
     "session": {
         "secret": "keyboard cat",
