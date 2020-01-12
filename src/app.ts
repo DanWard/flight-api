@@ -5,6 +5,7 @@ import * as bodyParser from "body-parser";
 import * as lusca from "lusca";
 import * as session from "express-session";
 import * as config from "config";
+import * as morgan from "morgan";
 
 import { FlightController } from "./routes/FlightController";
 import { FlightDatabase } from "./database/FlightDatabase";
@@ -52,20 +53,11 @@ if (app.get("env") === "production") {
 }
 // END: Security hardening
 
-/**
- * Add generic error handler
- */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-    console.error(err.stack)
-    res.status(500).send({
-        status: 500,
-        message: err.message
-    });
-});
+// Enable logging
+app.use(morgan("combined"));
 
 const flightDatabase = new FlightDatabase();
 const flightController = new FlightController(flightDatabase);
 app.use("/flights", flightController.router);
 
-module.exports = app.listen(expressConfig.port, () => console.log(`Express started on ${expressConfig.port}`));
+module.exports = app.listen(expressConfig.port, () => console.log(`[${new Date()}] Flight-API started on ${expressConfig.port}`));
