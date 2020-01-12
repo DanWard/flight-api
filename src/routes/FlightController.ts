@@ -5,7 +5,8 @@ import { Flight } from "../models/Flight";
 
 export class FlightController {
     public router = Router();
-    private airlineRegex = /^\w{2,4}$/g;
+    // IATA compliant regex
+    private airlineRegex = /^\w{2}$/g;
 
     constructor(private database: FlightDatabase) {
         this.router.get("/", this.getAll);
@@ -17,10 +18,11 @@ export class FlightController {
         let results = [];
         const { airline } = req.query;
 
+        // Validate if any query matches the regex
         if (airline && airline.match(this.airlineRegex)) {
             results = this.database.find({
                 flightNumber: {
-                    "$contains": airline
+                    "$regex": [`^${airline}.*`, "ig"]
                 }
             } as any);
         } else if (airline) {
