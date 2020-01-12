@@ -1,5 +1,13 @@
 # Flight-API
 
+## Tested runtime environment
+This service was built and tested on the following:
+```
+Windows 10 1909
+Node 13.5.0
+NPM 6.13.4
+```
+
 ## APIs
 ### `GET /flights?airline=XYZ`
 This API will return with the following syntax:
@@ -56,14 +64,14 @@ As this application has only a single function, a simple deployment can be consi
 ![Production Design](https://github.com/DanWard/flight-api/raw/master/production.png)
 
 ## Security
-Cyber security standards have also been considered and this application is shipped with multiple different protection mechanisms that are available when run in the production mode.
+Cyber security standards have also been considered and this application is shipped with multiple protection mechanisms that are available when run in the production mode.
 * CSRF
-* X-frame 
 * P3P
 * HSTS
 * XSS
-* Frame sniffing
-* Referral policy
+* X-frame protection
+* Disabling frame sniffing
+* Referral policy restrictions
 
 ### Considerations
 In a production environment, the `POST` request should be guarded against unauthenticated calls to ensure that the data quality is not degraded in any way due to accidental or purposeful data pollution.
