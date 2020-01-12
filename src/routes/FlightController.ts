@@ -30,13 +30,16 @@ export class FlightController {
                 }
             } as any);
         } else if (airline) {
-            throw new Error("Invalid airline specified.");
+            return res.status(400).send({
+                status: 400,
+                message: "Invalid airline specified."
+            });
         } else {
             // Empty query returns all
             results = this.database.find({});
         }
 
-        res.send({
+        return res.send({
             flights: results,
             size: results.length,
             status: 200
@@ -55,7 +58,7 @@ export class FlightController {
 
             const result = this.database.insert(flight);
 
-            res.status(201).send({
+            return res.status(201).send({
                 flight: result,
                 status: 201
             });
@@ -69,7 +72,7 @@ export class FlightController {
                 return prev;
             }, []) : undefined;
 
-            res.status(400).send({
+            return res.status(400).send({
                 error: "Request failed",
                 message: validationErrors ? validationErrors : "",
                 status: 400
@@ -84,7 +87,7 @@ export class FlightController {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     private handleErrors = (err: Error, req: Request, res: Response, next: NextFunction) => {
         console.error(err.stack);
-        res.status(500).send({
+        return res.status(500).send({
             status: 500,
             message: err.message
         });

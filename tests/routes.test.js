@@ -55,7 +55,7 @@ describe("Filter flights correctly", () => {
 
     it("should get the filtered airline", async () => {
         const res = await request(app)
-            .get("/flights?airline=ABC");
+            .get("/flights?airline=AB");
         expect(res.statusCode).toEqual(200);
         expect(res.body.size).toEqual(1);
         expect(res.body.flights[0]).toEqual(MOCK_DATA.flight3);
@@ -63,9 +63,15 @@ describe("Filter flights correctly", () => {
 
     it("should retrieve none", async () => {
         const res = await request(app)
-            .get("/flights?airline=UIZ");
+            .get("/flights?airline=UI");
         expect(res.statusCode).toEqual(200);
         expect(res.body.size).toEqual(0);
+    });
+
+    it("should fail to retrieve", async () => {
+        const res = await request(app)
+            .get("/flights?airline=ABC");
+        expect(res.statusCode).toEqual(400);
     });
 });
 
