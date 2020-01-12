@@ -2,7 +2,7 @@
     "express": {
         "port": 3000,
         "useCompression": true,
-        "useJsonParser": true, 
+        "useJsonParser": true,
         "useUrlEncParser": false,
         "useSession": true,
         "useLusca": false
@@ -15,5 +15,18 @@
     },
     "database": {
         "importMock": true
+    },
+    "lusca": {
+        "csrf": true,
+        "xframe": "SAMEORIGIN",
+        "p3p": "ABCDEF",
+        "hsts": {
+            "maxAge": 31536000,
+            "includeSubDomains": true,
+            "preload": true
+        },
+        "xssProtection": true,
+        "nosniff": true,
+        "referrerPolicy": "same-origin"
     }
 }
