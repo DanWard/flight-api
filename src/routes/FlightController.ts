@@ -26,7 +26,7 @@ export class FlightController {
         if (airline && airline.match(this.airlineRegex)) {
             results = this.database.find({
                 flightNumber: {
-                    "$regex": [`^${airline}.*`, "ig"]
+                    "$regex": [`^${airline}.*`, "i"]
                 }
             } as any);
         } else if (airline) {
