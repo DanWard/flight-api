@@ -14,6 +14,10 @@ export class FlightController {
         this.router.use(this.handleErrors);
     }
 
+    /**
+     * Controller for GET /flights
+     * Retrieves flights with given params
+     */
     private getAll = (req: Request, res: Response) => {
         let results = [];
         const { airline } = req.query;
@@ -28,6 +32,7 @@ export class FlightController {
         } else if (airline) {
             throw new Error("Invalid airline specified.");
         } else {
+            // Empty query returns all
             results = this.database.find({});
         }
 
@@ -38,8 +43,14 @@ export class FlightController {
         });
     }
 
+    /**
+     * Controller for POST /flights
+     * Inserts a given flight into the db
+     */
     private insertFlight = async (req: Request, res: Response) => {
         try {
+            // Validate that the flight is compliant with the TypeScript model
+            // Stringify is used to pass through our custom parser for JSON dates
             const flight: Flight = await parseJsonAndValidate(JSON.stringify(req.body), Flight) as Flight;
 
             const result = this.database.insert(flight);
@@ -52,6 +63,7 @@ export class FlightController {
         } catch (err) {
             console.error(err);
 
+            // Return all validation errors to the client to enable meaningful error messages
             const validationErrors = err.length ? err.reduce((prev: any, error: any) => {
                 prev.push(error.constraints);
                 return prev;
