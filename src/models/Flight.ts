@@ -3,7 +3,7 @@ import { Length, IsDate } from "class-validator";
 export class Flight {
 
     /**
-     * Given flight number and IATA airline code, for example XYZ12.
+     * Given flight number and IATA airline code, for example XY12.
      */
     @Length(3, 8)
     public flightNumber!: string;
