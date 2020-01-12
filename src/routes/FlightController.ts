@@ -1,25 +1,30 @@
-import { Router, Request, Response } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import { FlightDatabase } from "../database/FlightDatabase";
 import { parseJsonAndValidate } from "../util/ParseJson";
 import { Flight } from "../models/Flight";
 
 export class FlightController {
     public router = Router();
+    private airlineRegex = /^\w{2,4}$/g;
 
     constructor(private database: FlightDatabase) {
         this.router.get("/", this.getAll);
         this.router.post("/", this.insertFlight);
+        this.router.use(this.handleErrors);
     }
 
-    getAll = (req: Request, res: Response) => {
+    private getAll = (req: Request, res: Response) => {
         let results = [];
+        const { airline } = req.query;
 
-        if (req.query.airline) {
+        if (airline && airline.match(this.airlineRegex)) {
             results = this.database.find({
                 flightNumber: {
-                    "$contains": req.query.airline
+                    "$contains": airline
                 }
             } as any);
+        } else if (airline) {
+            throw new Error("Invalid airline specified.");
         } else {
             results = this.database.find({});
         }
@@ -31,7 +36,7 @@ export class FlightController {
         });
     }
 
-    insertFlight = async (req: Request, res: Response) => {
+    private insertFlight = async (req: Request, res: Response) => {
         try {
             const flight: Flight = await parseJsonAndValidate(JSON.stringify(req.body), Flight) as Flight;
 
@@ -56,5 +61,18 @@ export class FlightController {
                 status: 400
             });
         }
-    };
+    }
+
+
+    /**
+     * Add generic error handler
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    private handleErrors = (err: Error, req: Request, res: Response, next: NextFunction) => {
+        console.error(err.stack);
+        res.status(500).send({
+            status: 500,
+            message: err.message
+        });
+    }
 }
